@@ -4,14 +4,14 @@ package com.apps.quantitymeasurement;
  * QuantityMeasurementApp - UC1: Feet Equality
  * 
  * This class is responsible for checking the equality of two numerical values
- * measured in feet in the Quantity Measurement Application
+ * measured in inch in the Quantity Measurement Application
  * 
  */
 
 //class for Feet measurement
 public final class Feet {
 
-	private final double value;
+	final double value;
 
 	public Feet(double value) {
 		this.value = value;
