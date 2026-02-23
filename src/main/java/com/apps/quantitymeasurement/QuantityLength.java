@@ -1,11 +1,9 @@
 package com.apps.quantitymeasurement;
 
 /**
- * QuantityLength is an immutable value object for length measurements.
- * Supports: - UC3/UC4: equality across units by converting to base unit (feet)
- * - UC5: unit-to-unit conversion - UC6: addition returning result in unit of
- * first operand (instance add) - UC7: addition returning result in explicitly
- * specified target unit (static add)
+ * UC8: QuantityLength delegates all unit conversion to LengthUnit.
+ * QuantityLength focuses on: - validation - equals() - convertTo() - add()
+ * (UC6) and add(a,b,targetUnit) (UC7)
  */
 public final class QuantityLength {
 
@@ -28,12 +26,7 @@ public final class QuantityLength {
 		return unit;
 	}
 
-	// Base conversion helpers
-
-	private double toBaseFeet() {
-		return unit.toFeet(value);
-	}
-
+	// Validation (UC5)
 	private static void validate(double value, LengthUnit unit) {
 		if (unit == null) {
 			throw new IllegalArgumentException("Unit cannot be null");
@@ -43,8 +36,12 @@ public final class QuantityLength {
 		}
 	}
 
-	// UC3/UC4: Equality
+	// Base conversion (delegation to unit)
+	private double toBaseFeet() {
+		return unit.convertToBaseUnit(value);
+	}
 
+	// UC3/UC4: Equality
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -67,31 +64,22 @@ public final class QuantityLength {
 	}
 
 	// UC5: Conversion
-
-	/**
-	 * Static conversion API: result = value * (source.factor / target.factor)
-	 */
 	public static double convert(double value, LengthUnit source, LengthUnit target) {
 		validate(value, source);
 		if (target == null) {
 			throw new IllegalArgumentException("Target unit cannot be null");
 		}
 
-		double valueInFeet = source.toFeet(value);
-		return target.fromFeet(valueInFeet);
+		double inFeet = source.convertToBaseUnit(value);
+		return target.convertFromBaseUnit(inFeet);
 	}
 
-	/**
-	 * Instance conversion API: returns a NEW QuantityLength in target unit.
-	 */
 	public QuantityLength convertTo(LengthUnit targetUnit) {
 		double convertedValue = convert(this.value, this.unit, targetUnit);
 		return new QuantityLength(convertedValue, targetUnit);
 	}
 
 	// UC6/UC7: Addition
-	// UC7 core: add(a,b,targetUnit)
-	// UC6 backward compatible: this.add(other) -> result in this.unit
 
 	private static QuantityLength addInTargetUnit(QuantityLength a, QuantityLength b, LengthUnit targetUnit) {
 		if (a == null || b == null) {
@@ -102,28 +90,22 @@ public final class QuantityLength {
 		}
 
 		double sumFeet = a.toBaseFeet() + b.toBaseFeet();
-		double sumInTarget = targetUnit.fromFeet(sumFeet);
+		double sumInTarget = targetUnit.convertFromBaseUnit(sumFeet);
 
 		return new QuantityLength(sumInTarget, targetUnit);
 	}
 
-	/**
-	 * UC6: Instance add -> returns result in unit of FIRST operand (this.unit).
-	 */
+	// UC6: result in unit of first operand
 	public QuantityLength add(QuantityLength other) {
 		return addInTargetUnit(this, other, this.unit);
 	}
 
-	/**
-	 * UC7: Static add with explicit target unit.
-	 */
+	// UC7: explicit target unit
 	public static QuantityLength add(QuantityLength a, QuantityLength b, LengthUnit targetUnit) {
 		return addInTargetUnit(a, b, targetUnit);
 	}
 
-	/**
-	 * Overloaded add (raw values) with explicit target unit.
-	 */
+	// Overloaded add with raw values
 	public static QuantityLength add(double value1, LengthUnit unit1, double value2, LengthUnit unit2,
 			LengthUnit targetUnit) {
 		validate(value1, unit1);
@@ -132,8 +114,6 @@ public final class QuantityLength {
 			throw new IllegalArgumentException("Target unit cannot be null");
 		}
 
-		QuantityLength a = new QuantityLength(value1, unit1);
-		QuantityLength b = new QuantityLength(value2, unit2);
-		return addInTargetUnit(a, b, targetUnit);
+		return addInTargetUnit(new QuantityLength(value1, unit1), new QuantityLength(value2, unit2), targetUnit);
 	}
 }
