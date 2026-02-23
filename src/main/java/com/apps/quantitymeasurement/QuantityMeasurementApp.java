@@ -56,5 +56,33 @@ public class QuantityMeasurementApp {
 
 		System.out.println(QuantityWeight.add(new QuantityWeight(1.0, WeightUnit.KILOGRAM),
 				new QuantityWeight(1000.0, WeightUnit.GRAM), WeightUnit.GRAM));
-	}
-}
+		
+
+		        //  Length 
+		        Quantity<LengthUnit> l1 = new Quantity<>(1.0, LengthUnit.FEET);
+		        Quantity<LengthUnit> l2 = new Quantity<>(12.0, LengthUnit.INCHES);
+
+		        System.out.println("Length Equality: " + l1.equals(l2));
+		        System.out.println("Length Convert: " + l1.convertTo(LengthUnit.INCHES));
+		        System.out.println("Length Add: " + l1.add(l2, LengthUnit.FEET));
+
+		        System.out.println();
+
+		        // Weight 
+		        Quantity<WeightUnit> w1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+		        Quantity<WeightUnit> w2 = new Quantity<>(1000.0, WeightUnit.GRAM);
+
+		        System.out.println("Weight Equality: " + w1.equals(w2));
+		        System.out.println("Weight Convert: " + w1.convertTo(WeightUnit.GRAM));
+		        System.out.println("Weight Add: " + w1.add(w2, WeightUnit.KILOGRAM));
+
+		        System.out.println();
+
+		        // Cross-category (won't compile if generics used correctly)
+		        // l1.equals(w1)  
+		        // Compile error because types differ (Quantity<LengthUnit> vs Quantity<WeightUnit>)
+
+		        // Runtime check example (only if you force raw type / Object)
+		        System.out.println("Cross-category prevention (runtime): " + l1.equals((Object) w1));
+		    }
+		}
