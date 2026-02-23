@@ -1,38 +1,40 @@
 package com.apps.quantitymeasurement;
 
 /**
- * UC8: Standalone LengthUnit enum. Responsible for converting values to/from
- * the base unit FEET.
+ * Base unit: FEET
  */
-public enum LengthUnit {
+public enum LengthUnit implements IMeasurable {
 
-	// 1 cm = 0.393701 inch, and 1 inch = 1/12
-	// feet
-	FEET(1.0), INCHES(1.0 / 12.0), YARDS(3.0), CENTIMETERS(0.393701 / 12.0); 
+    FEET(1.0),
+    INCHES(1.0 / 12.0),
+    YARDS(3.0),
+    
+    // 1 cm = 0.393701 inch
+    CENTIMETERS(0.393701 / 12.0); 
 
-	private final double toFeetFactor;
+    private final double toFeetFactor;
 
-	LengthUnit(double toFeetFactor) {
-		this.toFeetFactor = toFeetFactor;
-	}
+    LengthUnit(double toFeetFactor) {
+        this.toFeetFactor = toFeetFactor;
+    }
 
-	/**
-	 * Converts a value in THIS unit to base unit (FEET). Example:
-	 * INCHES.convertToBaseUnit(12) = 1 feet
-	 */
-	public double convertToBaseUnit(double value) {
-		return value * toFeetFactor;
-	}
+    @Override
+    public double getConversionFactor() {
+        return toFeetFactor;
+    }
 
-	/**
-	 * Converts a value in base unit (FEET) to THIS unit. Example:
-	 * INCHES.convertFromBaseUnit(1) = 12 inches
-	 */
-	public double convertFromBaseUnit(double baseFeetValue) {
-		return baseFeetValue / toFeetFactor;
-	}
+    @Override
+    public double convertToBaseUnit(double value) {
+        return value * toFeetFactor;     
+    }
 
-	public double getConversionFactor() {
-		return toFeetFactor;
-	}
+    @Override
+    public double convertFromBaseUnit(double baseValue) {
+        return baseValue / toFeetFactor; 
+    }
+
+    @Override
+    public String getUnitName() {
+        return name();
+    }
 }
