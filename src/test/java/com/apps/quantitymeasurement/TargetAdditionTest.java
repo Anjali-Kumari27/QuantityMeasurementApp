@@ -11,7 +11,7 @@ public class TargetAdditionTest {
 	@Test
 	void testAddition_ExplicitTargetUnit_Feet() {
 		QuantityLength result = QuantityLength.add(new QuantityLength(1.0, LengthUnit.FEET),
-				new QuantityLength(12.0, LengthUnit.INCH), LengthUnit.FEET);
+				new QuantityLength(12.0, LengthUnit.INCHES), LengthUnit.FEET);
 
 		assertEquals(2.0, result.getValue(), EPSILON);
 		assertEquals(LengthUnit.FEET, result.getUnit());
@@ -20,16 +20,16 @@ public class TargetAdditionTest {
 	@Test
 	void testAddition_ExplicitTargetUnit_Inches() {
 		QuantityLength result = QuantityLength.add(new QuantityLength(1.0, LengthUnit.FEET),
-				new QuantityLength(12.0, LengthUnit.INCH), LengthUnit.INCH);
+				new QuantityLength(12.0, LengthUnit.INCHES), LengthUnit.INCHES);
 
 		assertEquals(24.0, result.getValue(), EPSILON);
-		assertEquals(LengthUnit.INCH, result.getUnit());
+		assertEquals(LengthUnit.INCHES, result.getUnit());
 	}
 
 	@Test
 	void testAddition_ExplicitTargetUnit_Yards() {
 		QuantityLength result = QuantityLength.add(new QuantityLength(1.0, LengthUnit.FEET),
-				new QuantityLength(12.0, LengthUnit.INCH), LengthUnit.YARDS);
+				new QuantityLength(12.0, LengthUnit.INCHES), LengthUnit.YARDS);
 
 		assertEquals(2.0 / 3.0, result.getValue(), EPSILON);
 		assertEquals(LengthUnit.YARDS, result.getUnit());
@@ -38,7 +38,7 @@ public class TargetAdditionTest {
 	@Test
 	void testAddition_ExplicitTargetUnit_Commutativity() {
 		QuantityLength a = new QuantityLength(1.0, LengthUnit.FEET);
-		QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
+		QuantityLength b = new QuantityLength(12.0, LengthUnit.INCHES);
 
 		QuantityLength r1 = QuantityLength.add(a, b, LengthUnit.YARDS);
 		QuantityLength r2 = QuantityLength.add(b, a, LengthUnit.YARDS);
@@ -51,6 +51,6 @@ public class TargetAdditionTest {
 	@Test
 	void testAddition_ExplicitTargetUnit_NullTargetUnit() {
 		assertThrows(IllegalArgumentException.class, () -> QuantityLength.add(new QuantityLength(1.0, LengthUnit.FEET),
-				new QuantityLength(12.0, LengthUnit.INCH), null));
+				new QuantityLength(12.0, LengthUnit.INCHES), null));
 	}
 }
