@@ -18,15 +18,15 @@ public class UnitAdditionTest {
 
 	@Test
 	void testAddition_SameUnit_InchPlusInch() {
-		QuantityLength result = new QuantityLength(6.0, LengthUnit.INCH).add(new QuantityLength(6.0, LengthUnit.INCH));
+		QuantityLength result = new QuantityLength(6.0, LengthUnit.INCHES).add(new QuantityLength(6.0, LengthUnit.INCHES));
 
 		assertEquals(12.0, result.getValue(), EPSILON);
-		assertEquals(LengthUnit.INCH, result.getUnit());
+		assertEquals(LengthUnit.INCHES, result.getUnit());
 	}
 
 	@Test
 	void testAddition_CrossUnit_FeetPlusInches() {
-		QuantityLength result = new QuantityLength(1.0, LengthUnit.FEET).add(new QuantityLength(12.0, LengthUnit.INCH));
+		QuantityLength result = new QuantityLength(1.0, LengthUnit.FEET).add(new QuantityLength(12.0, LengthUnit.INCHES));
 
 		assertEquals(2.0, result.getValue(), EPSILON);
 		assertEquals(LengthUnit.FEET, result.getUnit());
@@ -34,10 +34,10 @@ public class UnitAdditionTest {
 
 	@Test
 	void testAddition_CrossUnit_InchPlusFeet() {
-		QuantityLength result = new QuantityLength(12.0, LengthUnit.INCH).add(new QuantityLength(1.0, LengthUnit.FEET));
+		QuantityLength result = new QuantityLength(12.0, LengthUnit.INCHES).add(new QuantityLength(1.0, LengthUnit.FEET));
 
 		assertEquals(24.0, result.getValue(), EPSILON);
-		assertEquals(LengthUnit.INCH, result.getUnit());
+		assertEquals(LengthUnit.INCHES, result.getUnit());
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class UnitAdditionTest {
 	void testAddition_CrossUnit_CentimeterPlusInch() {
 		// 2.54 cm = 1 inch, so 2.54 cm + 1 inch = 2 inch = 5.08 cm
 		QuantityLength result = new QuantityLength(2.54, LengthUnit.CENTIMETERS)
-				.add(new QuantityLength(1.0, LengthUnit.INCH));
+				.add(new QuantityLength(1.0, LengthUnit.INCHES));
 
 		assertEquals(5.08, result.getValue(), 1e-4); // small tolerance ok
 		assertEquals(LengthUnit.CENTIMETERS, result.getUnit());
@@ -60,7 +60,7 @@ public class UnitAdditionTest {
 
 	@Test
 	void testAddition_WithZero() {
-		QuantityLength result = new QuantityLength(5.0, LengthUnit.FEET).add(new QuantityLength(0.0, LengthUnit.INCH));
+		QuantityLength result = new QuantityLength(5.0, LengthUnit.FEET).add(new QuantityLength(0.0, LengthUnit.INCHES));
 
 		assertEquals(5.0, result.getValue(), EPSILON);
 		assertEquals(LengthUnit.FEET, result.getUnit());
@@ -101,7 +101,7 @@ public class UnitAdditionTest {
 	@Test
 	void testAddition_Commutativity_InFeetBase() {
 		QuantityLength a = new QuantityLength(1.0, LengthUnit.FEET);
-		QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
+		QuantityLength b = new QuantityLength(12.0, LengthUnit.INCHES);
 
 		// since result unit depends on first operand, compare via base conversion
 		double sum1Feet = a.add(b).convertTo(LengthUnit.FEET).getValue();
