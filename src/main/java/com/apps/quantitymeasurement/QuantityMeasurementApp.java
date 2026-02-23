@@ -30,11 +30,8 @@ public class QuantityMeasurementApp {
 		System.out.println("Input: LengthUnit.INCHES.convertToBaseUnit(12.0) -> Output: "
 				+ LengthUnit.INCHES.convertToBaseUnit(12.0));
 
-		
-		
-		
-		//  UC9 Weight
-        System.out.println("Weight Equality:");
+		// UC9 Weight
+		System.out.println("Weight Equality:");
 		System.out.println(
 				new QuantityWeight(1.0, WeightUnit.KILOGRAM).equals(new QuantityWeight(1000.0, WeightUnit.GRAM)));
 
@@ -56,33 +53,45 @@ public class QuantityMeasurementApp {
 
 		System.out.println(QuantityWeight.add(new QuantityWeight(1.0, WeightUnit.KILOGRAM),
 				new QuantityWeight(1000.0, WeightUnit.GRAM), WeightUnit.GRAM));
-		
 
-		        //  Length 
-		        Quantity<LengthUnit> l1 = new Quantity<>(1.0, LengthUnit.FEET);
-		        Quantity<LengthUnit> l2 = new Quantity<>(12.0, LengthUnit.INCHES);
+		// Length
+		Quantity<LengthUnit> l1 = new Quantity<>(1.0, LengthUnit.FEET);
+		Quantity<LengthUnit> l2 = new Quantity<>(12.0, LengthUnit.INCHES);
 
-		        System.out.println("Length Equality: " + l1.equals(l2));
-		        System.out.println("Length Convert: " + l1.convertTo(LengthUnit.INCHES));
-		        System.out.println("Length Add: " + l1.add(l2, LengthUnit.FEET));
+		System.out.println("Length Equality: " + l1.equals(l2));
+		System.out.println("Length Convert: " + l1.convertTo(LengthUnit.INCHES));
+		System.out.println("Length Add: " + l1.add(l2, LengthUnit.FEET));
 
-		        System.out.println();
+		System.out.println();
 
-		        // Weight 
-		        Quantity<WeightUnit> w1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
-		        Quantity<WeightUnit> w2 = new Quantity<>(1000.0, WeightUnit.GRAM);
+		// Weight
+		Quantity<WeightUnit> w1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+		Quantity<WeightUnit> w2 = new Quantity<>(1000.0, WeightUnit.GRAM);
 
-		        System.out.println("Weight Equality: " + w1.equals(w2));
-		        System.out.println("Weight Convert: " + w1.convertTo(WeightUnit.GRAM));
-		        System.out.println("Weight Add: " + w1.add(w2, WeightUnit.KILOGRAM));
+		System.out.println("Weight Equality: " + w1.equals(w2));
+		System.out.println("Weight Convert: " + w1.convertTo(WeightUnit.GRAM));
+		System.out.println("Weight Add: " + w1.add(w2, WeightUnit.KILOGRAM));
 
-		        System.out.println();
+		System.out.println();
 
-		        // Cross-category (won't compile if generics used correctly)
-		        // l1.equals(w1)  
-		        // Compile error because types differ (Quantity<LengthUnit> vs Quantity<WeightUnit>)
+		// Cross-category (won't compile if generics used correctly)
+		// l1.equals(w1)
+		// Compile error because types differ (Quantity<LengthUnit> vs
+		// Quantity<WeightUnit>)
 
-		        // Runtime check example (only if you force raw type / Object)
-		        System.out.println("Cross-category prevention (runtime): " + l1.equals((Object) w1));
-		    }
-		}
+		// Runtime check example (only if you force raw type / Object)
+		System.out.println("Cross-category prevention (runtime): " + l1.equals((Object) w1));
+
+		// Volume (UC11)
+		Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+		Quantity<VolumeUnit> v3 = new Quantity<>(1.0, VolumeUnit.GALLON);
+
+		System.out.println("Volume Equality (1L == 1000mL): " + v1.equals(v2));
+		System.out.println("Volume Convert (1L -> mL): " + v1.convertTo(VolumeUnit.MILLILITRE));
+		System.out.println("Volume Convert (1 gal -> L): " + v3.convertTo(VolumeUnit.LITRE));
+		System.out.println("Volume Add (1L + 1000mL -> L): " + v1.add(v2, VolumeUnit.LITRE));
+		System.out.println("Volume Add (1L + 1gal -> mL): " + v1.add(v3, VolumeUnit.MILLILITRE));
+	}
+
+}
