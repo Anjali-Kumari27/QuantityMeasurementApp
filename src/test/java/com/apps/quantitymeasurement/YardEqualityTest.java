@@ -41,14 +41,14 @@ public class YardEqualityTest {
     @Test
     void testEquality_YardToInches_EquivalentValue() {
         QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARDS);
-        QuantityLength inches = new QuantityLength(36.0, LengthUnit.INCH);
+        QuantityLength inches = new QuantityLength(36.0, LengthUnit.INCHES);
 
         assertTrue(yard.equals(inches), "1.0 yard should equal 36.0 inches");
     }
 
     @Test
     void testEquality_InchesToYard_EquivalentValue() {
-        QuantityLength inches = new QuantityLength(36.0, LengthUnit.INCH);
+        QuantityLength inches = new QuantityLength(36.0, LengthUnit.INCHES);
         QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARDS);
 
         assertTrue(inches.equals(yard), "36.0 inches should equal 1.0 yard (symmetry)");
@@ -73,7 +73,7 @@ public class YardEqualityTest {
     @Test
     void testEquality_CentimetersToInches_EquivalentValue() {
         QuantityLength cm = new QuantityLength(1.0, LengthUnit.CENTIMETERS);
-        QuantityLength inch = new QuantityLength(0.393701, LengthUnit.INCH);
+        QuantityLength inch = new QuantityLength(0.393701, LengthUnit.INCHES);
 
         assertTrue(cm.equals(inch), "1.0 cm should equal 0.393701 inch");
     }
@@ -90,7 +90,7 @@ public class YardEqualityTest {
     void testEquality_MultiUnit_TransitiveProperty() {
         QuantityLength a = new QuantityLength(1.0, LengthUnit.YARDS);
         QuantityLength b = new QuantityLength(3.0, LengthUnit.FEET);
-        QuantityLength c = new QuantityLength(36.0, LengthUnit.INCH);
+        QuantityLength c = new QuantityLength(36.0, LengthUnit.INCHES);
 
         assertTrue(a.equals(b), "1 yard == 3 feet");
         assertTrue(b.equals(c), "3 feet == 36 inches");
@@ -101,7 +101,7 @@ public class YardEqualityTest {
     void testEquality_AllUnits_ComplexScenario() {
         QuantityLength yards = new QuantityLength(2.0, LengthUnit.YARDS);
         QuantityLength feet = new QuantityLength(6.0, LengthUnit.FEET);
-        QuantityLength inches = new QuantityLength(72.0, LengthUnit.INCH);
+        QuantityLength inches = new QuantityLength(72.0, LengthUnit.INCHES);
 
         assertTrue(yards.equals(feet), "2 yards should equal 6 feet");
         assertTrue(feet.equals(inches), "6 feet should equal 72 inches");
