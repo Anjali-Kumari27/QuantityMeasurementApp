@@ -1,43 +1,39 @@
 package com.apps.quantitymeasurement;
 
 public class QuantityMeasurementApp {
+    public static void main(String[] args) {
 
-	public static void main(String[] args) {
+        System.out.println("Input: Quantity(1.0, FEET).convertTo(INCHES) -> Output: "
+                + new QuantityLength(1.0, LengthUnit.FEET).convertTo(LengthUnit.INCHES));
 
-		// UC5: Conversion Demo
-		System.out.println("Input: convert(1.0, FEET, INCH) -> Output: "
-				+ QuantityLength.convert(1.0, LengthUnit.FEET, LengthUnit.INCH));
+        System.out.println("Input: Quantity(1.0, FEET).add(Quantity(12.0, INCHES), FEET) -> Output: "
+                + QuantityLength.add(
+                        new QuantityLength(1.0, LengthUnit.FEET),
+                        new QuantityLength(12.0, LengthUnit.INCHES),
+                        LengthUnit.FEET));
 
-		System.out.println("Input: convert(3.0, YARDS, FEET) -> Output: "
-				+ QuantityLength.convert(3.0, LengthUnit.YARDS, LengthUnit.FEET));
+        System.out.println("Input: Quantity(36.0, INCHES).equals(Quantity(1.0, YARDS)) -> Output: "
+                + new QuantityLength(36.0, LengthUnit.INCHES).equals(new QuantityLength(1.0, LengthUnit.YARDS)));
 
-		System.out.println("Input: convert(36.0, INCH, YARDS) -> Output: "
-				+ QuantityLength.convert(36.0, LengthUnit.INCH, LengthUnit.YARDS));
+        System.out.println("Input: Quantity(1.0, YARDS).add(Quantity(3.0, FEET), YARDS) -> Output: "
+                + QuantityLength.add(
+                        new QuantityLength(1.0, LengthUnit.YARDS),
+                        new QuantityLength(3.0, LengthUnit.FEET),
+                        LengthUnit.YARDS));
 
-		System.out.println("Input: convert(1.0, CENTIMETERS, INCH) -> Output: "
-				+ QuantityLength.convert(1.0, LengthUnit.CENTIMETERS, LengthUnit.INCH));
+        System.out.println("Input: Quantity(2.54, CENTIMETERS).convertTo(INCHES) -> Output: "
+                + new QuantityLength(2.54, LengthUnit.CENTIMETERS).convertTo(LengthUnit.INCHES));
 
-		System.out.println();
+        System.out.println("Input: Quantity(5.0, FEET).add(Quantity(0.0, INCHES), FEET) -> Output: "
+                + QuantityLength.add(
+                        new QuantityLength(5.0, LengthUnit.FEET),
+                        new QuantityLength(0.0, LengthUnit.INCHES),
+                        LengthUnit.FEET));
 
-		// UC6: Addition Demo (result in first operand unit)
-		System.out.println(
-				"UC6: " + new QuantityLength(1.0, LengthUnit.FEET).add(new QuantityLength(12.0, LengthUnit.INCH))); // 2
-																													// feet
+        System.out.println("Input: LengthUnit.FEET.convertToBaseUnit(12.0) -> Output: "
+                + LengthUnit.FEET.convertToBaseUnit(12.0));
 
-		System.out.println(
-				"UC6: " + new QuantityLength(12.0, LengthUnit.INCH).add(new QuantityLength(1.0, LengthUnit.FEET))); // 24
-																													// inches
-
-		System.out.println();
-
-		// UC7: Addition Demo (explicit target unit)
-		QuantityLength a = new QuantityLength(1.0, LengthUnit.FEET);
-		QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
-
-		System.out.println("UC7: add(" + a + ", " + b + ", FEET) -> " + QuantityLength.add(a, b, LengthUnit.FEET));
-
-		System.out.println("UC7: add(" + a + ", " + b + ", INCH) -> " + QuantityLength.add(a, b, LengthUnit.INCH));
-
-		System.out.println("UC7: add(" + a + ", " + b + ", YARDS) -> " + QuantityLength.add(a, b, LengthUnit.YARDS));
-	}
+        System.out.println("Input: LengthUnit.INCHES.convertToBaseUnit(12.0) -> Output: "
+                + LengthUnit.INCHES.convertToBaseUnit(12.0));
+    }
 }
