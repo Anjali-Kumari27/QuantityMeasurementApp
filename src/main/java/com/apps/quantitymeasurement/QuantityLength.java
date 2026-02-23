@@ -1,8 +1,11 @@
 package com.apps.quantitymeasurement;
 
 /**
- * QuantityLength represents an immutable length measurement. Supports equality
- * and unit-to-unit conversion.
+ * QuantityLength is an immutable value object for length measurements.
+ * Supports: - UC3/UC4: equality across units by converting to base unit (feet)
+ * - UC5: unit-to-unit conversion - UC6: addition returning result in unit of
+ * first operand (instance add) - UC7: addition returning result in explicitly
+ * specified target unit (static add)
  */
 public final class QuantityLength {
 
@@ -25,11 +28,22 @@ public final class QuantityLength {
 		return unit;
 	}
 
-	// EQUALITY
+	// Base conversion helpers
 
 	private double toBaseFeet() {
 		return unit.toFeet(value);
 	}
+
+	private static void validate(double value, LengthUnit unit) {
+		if (unit == null) {
+			throw new IllegalArgumentException("Unit cannot be null");
+		}
+		if (!Double.isFinite(value)) {
+			throw new IllegalArgumentException("Value must be finite");
+		}
+	}
+
+	// UC3/UC4: Equality
 
 	@Override
 	public boolean equals(Object obj) {
@@ -39,7 +53,6 @@ public final class QuantityLength {
 			return false;
 
 		QuantityLength other = (QuantityLength) obj;
-
 		return Math.abs(this.toBaseFeet() - other.toBaseFeet()) < EPSILON;
 	}
 
@@ -53,10 +66,10 @@ public final class QuantityLength {
 		return "Quantity(" + value + ", " + unit.name() + ")";
 	}
 
-	// CONVERSION
+	// UC5: Conversion
 
 	/**
-	 * Static conversion API
+	 * Static conversion API: result = value * (source.factor / target.factor)
 	 */
 	public static double convert(double value, LengthUnit source, LengthUnit target) {
 		validate(value, source);
@@ -69,46 +82,18 @@ public final class QuantityLength {
 	}
 
 	/**
-	 * Instance conversion API (returns new object)
+	 * Instance conversion API: returns a NEW QuantityLength in target unit.
 	 */
 	public QuantityLength convertTo(LengthUnit targetUnit) {
 		double convertedValue = convert(this.value, this.unit, targetUnit);
 		return new QuantityLength(convertedValue, targetUnit);
 	}
 
-	// VALIDATION
+	// UC6/UC7: Addition
+	// UC7 core: add(a,b,targetUnit)
+	// UC6 backward compatible: this.add(other) -> result in this.unit
 
-	private static void validate(double value, LengthUnit unit) {
-		if (unit == null)
-			throw new IllegalArgumentException("Unit cannot be null");
-
-		if (!Double.isFinite(value))
-			throw new IllegalArgumentException("Value must be finite");
-	}
-
-	// unit ADDITION
-
-	/**
-	 * Instance method: Adds another length to this length and returns result in
-	 * THIS unit (unit of first operand).
-	 */
-	public QuantityLength add(QuantityLength other) {
-		if (other == null) {
-			throw new IllegalArgumentException("Second operand cannot be null");
-		}
-
-		// both are already validated in constructor
-		double sumFeet = this.toBaseFeet() + other.toBaseFeet();
-		double sumInThisUnit = this.unit.fromFeet(sumFeet);
-
-		return new QuantityLength(sumInThisUnit, this.unit);
-	}
-
-	/**
-	 * Static method: Adds two QuantityLength values and returns result in
-	 * targetUnit.
-	 */
-	public static QuantityLength add(QuantityLength a, QuantityLength b, LengthUnit targetUnit) {
+	private static QuantityLength addInTargetUnit(QuantityLength a, QuantityLength b, LengthUnit targetUnit) {
 		if (a == null || b == null) {
 			throw new IllegalArgumentException("Operands cannot be null");
 		}
@@ -123,13 +108,24 @@ public final class QuantityLength {
 	}
 
 	/**
-	 * Overloaded add (raw values): Adds (value1, unit1) + (value2, unit2) and
-	 * returns result in targetUnit.
+	 * UC6: Instance add -> returns result in unit of FIRST operand (this.unit).
+	 */
+	public QuantityLength add(QuantityLength other) {
+		return addInTargetUnit(this, other, this.unit);
+	}
+
+	/**
+	 * UC7: Static add with explicit target unit.
+	 */
+	public static QuantityLength add(QuantityLength a, QuantityLength b, LengthUnit targetUnit) {
+		return addInTargetUnit(a, b, targetUnit);
+	}
+
+	/**
+	 * Overloaded add (raw values) with explicit target unit.
 	 */
 	public static QuantityLength add(double value1, LengthUnit unit1, double value2, LengthUnit unit2,
 			LengthUnit targetUnit) {
-
-		// validate value+unit using existing validate()
 		validate(value1, unit1);
 		validate(value2, unit2);
 		if (targetUnit == null) {
@@ -138,7 +134,6 @@ public final class QuantityLength {
 
 		QuantityLength a = new QuantityLength(value1, unit1);
 		QuantityLength b = new QuantityLength(value2, unit2);
-
-		return add(a, b, targetUnit);
+		return addInTargetUnit(a, b, targetUnit);
 	}
 }
