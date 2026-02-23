@@ -16,8 +16,8 @@ public class QuantityLengthTest {
 
 	@Test
 	void testEquality_InchToInch_SameValue() {
-		QuantityLength q1 = new QuantityLength(1.0, LengthUnit.INCH);
-		QuantityLength q2 = new QuantityLength(1.0, LengthUnit.INCH);
+		QuantityLength q1 = new QuantityLength(1.0, LengthUnit.INCHES);
+		QuantityLength q2 = new QuantityLength(1.0, LengthUnit.INCHES);
 
 		assertTrue(q1.equals(q2), "1.0 inch should equal 1.0 inch");
 	}
@@ -25,14 +25,14 @@ public class QuantityLengthTest {
 	@Test
 	void testEquality_FeetToInch_EquivalentValue() {
 		QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
-		QuantityLength inch = new QuantityLength(12.0, LengthUnit.INCH);
+		QuantityLength inch = new QuantityLength(12.0, LengthUnit.INCHES);
 
 		assertTrue(feet.equals(inch), "1.0 feet should equal 12.0 inch");
 	}
 
 	@Test
 	void testEquality_InchToFeet_EquivalentValue() {
-		QuantityLength inch = new QuantityLength(12.0, LengthUnit.INCH);
+		QuantityLength inch = new QuantityLength(12.0, LengthUnit.INCHES);
 		QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
 
 		assertTrue(inch.equals(feet), "12.0 inch should equal 1.0 feet (symmetry)");
@@ -48,8 +48,8 @@ public class QuantityLengthTest {
 
 	@Test
 	void testEquality_InchToInch_DifferentValue() {
-		QuantityLength q1 = new QuantityLength(1.0, LengthUnit.INCH);
-		QuantityLength q2 = new QuantityLength(2.0, LengthUnit.INCH);
+		QuantityLength q1 = new QuantityLength(1.0, LengthUnit.INCHES);
+		QuantityLength q2 = new QuantityLength(2.0, LengthUnit.INCHES);
 
 		assertFalse(q1.equals(q2), "1.0 inch should NOT equal 2.0 inch");
 	}
@@ -87,6 +87,6 @@ public class QuantityLengthTest {
 	@Test
 	void testEquality_InvalidNumber_Infinity() {
 		assertThrows(IllegalArgumentException.class,
-				() -> new QuantityLength(Double.POSITIVE_INFINITY, LengthUnit.INCH), "Infinity should throw exception");
+				() -> new QuantityLength(Double.POSITIVE_INFINITY, LengthUnit.INCHES), "Infinity should throw exception");
 	}
 }
