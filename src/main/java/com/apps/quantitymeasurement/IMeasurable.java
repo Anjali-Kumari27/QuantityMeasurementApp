@@ -1,12 +1,27 @@
 package com.apps.quantitymeasurement;
 
+@FunctionalInterface
+interface SupportsArithmetic {
+    boolean isSupported();
+}
+
 public interface IMeasurable {
 
-	double getConversionFactor();
+    // ===== Conversion Contract (Mandatory) =====
+    double convertToBaseUnit(double value);
+    double convertFromBaseUnit(double baseValue);
+    double getConversionFactor();
+    String getUnitName();
 
-	double convertToBaseUnit(double value);
+    // ===== Default Arithmetic Support (NEW - UC14) =====
+    SupportsArithmetic supportsArithmetic = () -> true;
 
-	double convertFromBaseUnit(double baseValue);
+    default boolean supportsArithmetic() {
+        return supportsArithmetic.isSupported();
+    }
 
-	String getUnitName();
+    default void validateOperationSupport(String operation) {
+        // By default, all measurable units support arithmetic.
+        // TemperatureUnit will override this.
+    }
 }
