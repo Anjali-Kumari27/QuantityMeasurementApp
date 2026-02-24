@@ -76,7 +76,12 @@ public class Quantity<U extends IMeasurable> {
 	// UC13: Centralized arithmetic core (single source of truth)
 	// ==========================================================
 	private double performBaseArithmetic(Quantity<U> other, ArithmeticOperation operation) {
+
 		validateOperand(other);
+
+		// NEW — Validate arithmetic support
+		this.unit.validateOperationSupport(operation.name());
+		other.unit.validateOperationSupport(operation.name());
 
 		double base1 = this.unit.convertToBaseUnit(this.value);
 		double base2 = other.unit.convertToBaseUnit(other.value);
