@@ -95,35 +95,56 @@ public class QuantityMeasurementApp {
 
 		// UC12 Subtraction (Length)
 		// 9.50 feet -> prints 9.5 FEET due to rounding
-		System.out.println(l1 + " - " + l2 + " = " + l1.subtract(l2)); 
-		
+		System.out.println(l1 + " - " + l2 + " = " + l1.subtract(l2));
+
 		// 114.0 INCHES
-		System.out.println(l1 + " - " + l2 + " in INCHES = " + l1.subtract(l2, LengthUnit.INCHES)); 
+		System.out.println(l1 + " - " + l2 + " in INCHES = " + l1.subtract(l2, LengthUnit.INCHES));
 
 		// UC12 Division (Length)
 		System.out.println(new Quantity<>(24.0, LengthUnit.INCHES).divide(new Quantity<>(2.0, LengthUnit.FEET))); // 1.0
 
 		// UC12 Subtraction (Weight)
 		// 5.0 KILOGRAM
-		System.out.println(w1 + " - " + w2 + " = " + w1.subtract(w2)); 
-		
+		System.out.println(w1 + " - " + w2 + " = " + w1.subtract(w2));
+
 		// 5000.0 GRAM
-		System.out.println(w1 + " - " + w2 + " in GRAM = " + w1.subtract(w2, WeightUnit.GRAM)); 
+		System.out.println(w1 + " - " + w2 + " in GRAM = " + w1.subtract(w2, WeightUnit.GRAM));
 
 		// UC12 Division (Weight)
-		System.out.println(new Quantity<>(2000.0, WeightUnit.GRAM).divide(new Quantity<>(1.0, WeightUnit.KILOGRAM))); 
+		System.out.println(new Quantity<>(2000.0, WeightUnit.GRAM).divide(new Quantity<>(1.0, WeightUnit.KILOGRAM)));
 
 		// UC12 Subtraction (Volume)
 		// 4.5 LITRE
-		System.out.println(v1 + " - " + v2 + " = " + v1.subtract(v2)); 
-		
+		System.out.println(v1 + " - " + v2 + " = " + v1.subtract(v2));
+
 		// 3000.0 MILLILITRE
 		System.out.println(v1 + " - " + new Quantity<>(2.0, VolumeUnit.LITRE) + " in MILLILITRE = "
-				+ v1.subtract(new Quantity<>(2.0, VolumeUnit.LITRE), VolumeUnit.MILLILITRE)); 
+				+ v1.subtract(new Quantity<>(2.0, VolumeUnit.LITRE), VolumeUnit.MILLILITRE));
 
 		// UC12 Division (Volume)
-		 // 0.5
+		// 0.5
 		System.out.println(new Quantity<>(5.0, VolumeUnit.LITRE).divide(new Quantity<>(10.0, VolumeUnit.LITRE)));
+
+		
+		
+		
+		// ===== Temperature Equality =====
+		Quantity<TemperatureUnit> t1 = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+
+		Quantity<TemperatureUnit> t2 = new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
+
+		System.out.println("0°C equals 32°F? " + t1.equals(t2));
+
+		// ===== Temperature Conversion =====
+		System.out.println(
+				"100°C to F = " + new Quantity<>(100.0, TemperatureUnit.CELSIUS).convertTo(TemperatureUnit.FAHRENHEIT));
+
+		// ===== Unsupported Arithmetic =====
+		try {
+			t1.add(new Quantity<>(50.0, TemperatureUnit.CELSIUS));
+		} catch (UnsupportedOperationException e) {
+			System.out.println("Expected error: " + e.getMessage());
+		}
 	}
 
 }
