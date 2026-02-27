@@ -34,92 +34,92 @@ The architecture ensures:
 
 
 🧩 UC1 – Feet Equality  
-Implements value-based equality for feet measurements.  
-Establishes the foundational equality contract using overridden equals().
+- Implements value-based equality for feet measurements.  
+- Establishes the foundational equality contract using overridden equals().
 
 
 🧩 UC2 – Inches Equality  
-Extends equality comparison to inches.  
-Reinforces unit-specific validation and comparison semantics.
+- Extends equality comparison to inches.  
+- Reinforces unit-specific validation and comparison semantics.
 
 
 🧩 UC3 – Generic Length  
-Introduces LengthUnit enum.  
-Unifies different length types under a common abstraction.  
-Enables cross-unit equality using conversion factors.
+- Introduces LengthUnit enum.  
+- Unifies different length types under a common abstraction.  
+- Enables cross-unit equality using conversion factors.
 
 
 🧩 UC4 – Extended Length Units  
-Adds YARDS and CENTIMETERS.  
-Demonstrates scalability of enum-based unit modeling.
+- Adds YARDS and CENTIMETERS.  
+- Demonstrates scalability of enum-based unit modeling.
 
 
 🧩 UC5 – Explicit Unit Conversion  
-Introduces convertTo() functionality.  
-Supports conversion between supported length units.  
-Ensures mathematical equivalence.
+- Introduces convertTo() functionality.  
+- Supports conversion between supported length units.  
+- Ensures mathematical equivalence.
 
 
 🧩 UC6 – Length Addition  
-Introduces addition between length quantities.  
-Automatically normalizes to base unit.  
-Returns result in first operand’s unit.
+- Introduces addition between length quantities.  
+- Automatically normalizes to base unit.  
+- Returns result in first operand’s unit.
 
 
 🧩 UC7 – Addition with Target Unit  
-Allows explicit specification of result unit.  
-Improves API flexibility and user control.
+- Allows explicit specification of result unit.  
+- Improves API flexibility and user control.
 
 
 🧩 UC8 – Standalone Unit Refactor  
-Extracts LengthUnit into standalone enum.  
-Delegates conversion logic entirely to unit enum.  
-Improves cohesion and reduces coupling.  
-Eliminates circular dependency risk.
+- Extracts LengthUnit into standalone enum.  
+- Delegates conversion logic entirely to unit enum.  
+- Improves cohesion and reduces coupling.  
+- Eliminates circular dependency risk.
 
 
 🧩 UC9 – Weight Measurement Support  
-Introduces WeightUnit (Kilogram, Gram, Pound).  
-Supports equality, conversion, addition.  
-Maintains strict category isolation from length.
+- Introduces WeightUnit (Kilogram, Gram, Pound).  
+- Supports equality, conversion, addition.  
+- Maintains strict category isolation from length.
 
 
 🧩 UC10 – Generic Quantity Architecture  
-Introduces Quantity<U extends IMeasurable>.  
-Eliminates category-specific duplication.  
-Unifies equality, conversion, and arithmetic logic.  
-Enables true multi-category scalability.
+- Introduces Quantity<U extends IMeasurable>.  
+- Eliminates category-specific duplication.  
+- Unifies equality, conversion, and arithmetic logic.  
+- Enables true multi-category scalability.
 
 
 🧩 UC11 – Volume Measurement Support  
-Adds VolumeUnit (Litre, Millilitre, Gallon).  
-Validates integration of new categories without modifying core logic.  
-Confirms architecture extensibility.
+- Adds VolumeUnit (Litre, Millilitre, Gallon).  
+- Validates integration of new categories without modifying core logic.  
+- Confirms architecture extensibility.
 
 
 🧩 UC12 – Subtraction and Division  
-Introduces subtraction between quantities.  
-Introduces division producing dimensionless ratio.  
-Supports cross-unit normalization.  
-Maintains immutability and validation consistency.
+- Introduces subtraction between quantities.  
+- Introduces division producing dimensionless ratio.  
+- Supports cross-unit normalization.  
+- Maintains immutability and validation consistency.
 
 
 🧩 UC13 – Centralized Arithmetic Logic (DRY Refactor)  
-Refactors add(), subtract(), divide() to use centralized helper logic.  
-Eliminates duplicated validation and conversion code.  
-Introduces ArithmeticOperation enum dispatch.  
-Improves maintainability and scalability.  
-Preserves full backward compatibility.
+- Refactors add(), subtract(), divide() to use centralized helper logic.  
+- Eliminates duplicated validation and conversion code.  
+- Introduces ArithmeticOperation enum dispatch.  
+- Improves maintainability and scalability.  
+-Preserves full backward compatibility.
 
 
 🧩 UC14 – Temperature Measurement (Selective Arithmetic Support)  
-Introduces TemperatureUnit (Celsius, Fahrenheit, Kelvin).  
-Implements non-linear conversion formulas.  
-Refactors IMeasurable with default capability validation methods.  
-Allows equality and conversion for temperature.  
-Blocks unsupported arithmetic operations (add, subtract, divide).  
-Demonstrates capability-based design and Interface Segregation.  
-Maintains compatibility with all previous use cases.
+- Introduces TemperatureUnit (Celsius, Fahrenheit, Kelvin).  
+- Implements non-linear conversion formulas.  
+- Refactors IMeasurable with default capability validation methods.  
+- Allows equality and conversion for temperature.  
+- Blocks unsupported arithmetic operations (add, subtract, divide).  
+- Demonstrates capability-based design and Interface Segregation.  
+- Maintains compatibility with all previous use cases.
 
 
 ## Core Capabilities
