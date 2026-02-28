@@ -32,17 +32,35 @@ src
  │         └── com/
  │              └── apps/
  │                   └── quantitymeasurement
- │                        ├── IMeasurable.java
- │                        ├── Quantity.java
- │                        ├── LengthUnit.java
- │                        ├── WeightUnit.java
- │                        └── VolumeUnit.java
+ │                         └── Feet.java
+ │                         └── IMeasurable.java
+ │                         └── Inch.java
+ │                         └── LengthUnit.java
+ │                         └── QuantityLength.java
+ │                         └── QuantityMeasurementApp.java
+ │                         └── QuantityWeight.java
+ │                         └── VolumeUnit.java
+ │                         └── WeightUnit.java
  │  
  └── test  
- │    └── java/com/apps/quantitymeasurement  
+ │    └── java/
+ │         └── com/
+ │              └── apps/
+ │                   └── quantitymeasurement
+ │                         └── FeetEqualityTest.java
+ │                         └── GenericQuantityTest.java
+ │                         └── InchEqualityTest.java
+ │                         └── QuantityLengthTest.java
+ │                         └── QuantityWeightTest.java
+ │                         └── TargetAdditionTest.java
+ │                         └── UnitAdditionTest.java
+ │                         └── UnitConversionTest.java
+ │                         └── VolumeTest.java
+ │                         └── YardEqualityTest.java
  │
  ├── .gitignore
  └── pom.xml
+
 ```
 
 ---
