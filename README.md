@@ -51,6 +51,49 @@ Quantity<U>
  └── divide()
 ```
 
+## Project Structure
+
+```
+src  
+ ├── main  
+ │    └── java/
+ │         └── com/
+ │              └── apps/
+ │                   └── quantitymeasurement
+ │                         └── Feet.java
+ │                         └── IMeasurable.java
+ │                         └── Inch.java
+ │                         └── LengthUnit.java
+ │                         └── QuantityLength.java
+ │                         └── QuantityMeasurementApp.java
+ │                         └── QuantityWeight.java
+ │                         └── VolumeUnit.java
+ │                         └── WeightUnit.java
+ │  
+ └── test  
+ │    └── java/
+ │         └── com/
+ │              └── apps/
+ │                   └── quantitymeasurement
+ │                         └── FeetEqualityTest.java
+ │                         └── GenericQuantityTest.java
+ │                         └── InchEqualityTest.java
+ │                         └── QuantityLengthTest.java
+ │                         └── QuantityWeightTest.java
+ │                         └── QuantityWeightTest.java
+ │                         └── SubtractionDivisionnTest.java
+ │                         └── UnitAdditionTest.java
+ │                         └── UnitConversionTest.java
+ │                         └── VolumeTest.java
+ │                         └── YardEqualityTest.java
+ │
+ ├── .gitignore
+ └── pom.xml
+```
+
+---
+
+
 Public API remains:
 - add(other)
 - add(other, targetUnit)
