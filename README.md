@@ -22,9 +22,15 @@ src
  │         └── com/
  │              └── apps/
  │                   └── quantitymeasurement
+ │                         └── Feet.java
+ │                         └── QuantityMeasurementApp.java
  │  
  └── test  
- │    └── java/com/apps/quantitymeasurement  
+ │    └── java/
+ │         └── com/
+ │              └── apps/
+ │                   └── quantitymeasurement
+ │                         └── FeetEqualityTest.java
  │
  ├── .gitignore
  └── pom.xml
