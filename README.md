@@ -25,9 +25,23 @@ src
  │         └── com/
  │              └── apps/
  │                   └── quantitymeasurement
+ │                         └── Feet.java
+ │                         └── Inch.java
+ │                         └── LengthUnit.java
+ │                         └── QuantityLength.java
+ │                         └── QuantityMeasurementApp.java
  │  
  └── test  
- │    └── java/com/apps/quantitymeasurement  
+ │    └── java/
+ │         └── com/
+ │              └── apps/
+ │                   └── quantitymeasurement
+ │                         └── FeetEqualityTest.java
+ │                         └── InchEqualityTest.java
+ │                         └── QuantityLengthTest.java
+ │                         └── UnitAdditionTest.java
+ │                         └── UnitConversionTest.java
+ │                         └── YardEqualityTest.java
  │
  ├── .gitignore
  └── pom.xml
