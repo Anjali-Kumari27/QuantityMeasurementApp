@@ -33,16 +33,31 @@ src
  │         └── com/
  │              └── apps/
  │                   └── quantitymeasurement
- │                        ├── QuantityLength.java
- │                        ├── LengthUnit.java
- │                        ├── QuantityWeight.java
- │                        └── WeightUnit.java
+ │                         └── Feet.java
+ │                         └── Inch.java
+ │                         └── LengthUnit.java
+ │                         └── QuantityLength.java
+ │                         └── QuantityMeasurementApp.java
+ │                         └── QuantityWeight.java
+ │                         └── WeightUnit.java
  │  
  └── test  
- │    └── java/com/apps/quantitymeasurement  
+ │    └── java/
+ │         └── com/
+ │              └── apps/
+ │                   └── quantitymeasurement
+ │                         └── FeetEqualityTest.java
+ │                         └── InchEqualityTest.java
+ │                         └── QuantityLengthTest.java
+ │                         └── QuantityWeightTest.java
+ │                         └── TargetAdditionTest.java
+ │                         └── UnitAdditionTest.java
+ │                         └── UnitConversionTest.java
+ │                         └── YardEqualityTest.java
  │
  ├── .gitignore
  └── pom.xml
+
 ```
 
 ---
