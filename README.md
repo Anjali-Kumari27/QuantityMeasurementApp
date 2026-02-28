@@ -23,22 +23,43 @@
 ```
 src  
  ├── main  
- │    └── java/  
- │         └── com/  
- │              └── apps/  
- │                   └── quantitymeasurement  
- │                        ├── Quantity.java  
- │                        ├── IMeasurable.java  
- │                        ├── LengthUnit.java  
- │                        ├── WeightUnit.java  
- │                        ├── VolumeUnit.java  
- │                        └── TemperatureUnit.java  
+ │    └── java/
+ │         └── com/
+ │              └── apps/
+ │                   └── quantitymeasurement
+ │                         └── Feet.java
+ │                         └── IMeasurable.java
+ │                         └── Inch.java
+ │                         └── LengthUnit.java
+ │                         └── QuantityLength.java
+ │                         └── QuantityMeasurementApp.java
+ │                         └── QuantityWeight.java
+ │                         └── TemperatureUnit.java
+ │                         └── VolumeUnit.java
+ │                         └── WeightUnit.java
  │  
  └── test  
- │    └── java/com/apps/quantitymeasurement  
- │  
- ├── .gitignore  
- └── pom.xml  
+ │    └── java/
+ │         └── com/
+ │              └── apps/
+ │                   └── quantitymeasurement
+ │                         └── FeetEqualityTest.java
+ │                         └── GenericQuantityTest.java
+ │                         └── InchEqualityTest.java
+ │                         └── QuantityLengthTest.java
+ │                         └── QuantityWeightTest.java
+ │                         └── QuantityWeightTest.java
+ │                         └── SubtractionDivisionnTest.java
+ │                         └── TargetAdditionTest.java
+ │                         └── TemperatureUnitTest.java
+ │                         └── UnitAdditionTest.java
+ │                         └── UnitConversionTest.java
+ │                         └── VolumeTest.java
+ │                         └── YardEqualityTest.java
+ │
+ ├── .gitignore
+ └── pom.xml
+
 ```
 
 ---
