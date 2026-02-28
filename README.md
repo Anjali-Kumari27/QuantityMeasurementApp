@@ -175,13 +175,16 @@ mvn test
 │   │       └── 📁 com
 │   │           └── 📁 apps
 │   │               └── 📁 quantitymeasurement
+│   │                   ├── Feet.java
+│   │                   ├── Inch.java
 │   │                   ├── IMeasurable.java
 │   │                   ├── Quantity.java
 │   │                   ├── LengthUnit.java
 │   │                   ├── WeightUnit.java
 │   │                   ├── VolumeUnit.java
 │   │                   ├── TemperatureUnit.java
-│   │                   ├── SupportsArithmetic.java
+│   │                   ├── QuantityLength.java
+│   │                   ├── QuantityWeight.java
 │   │                   └── QuantityMeasurementApp.java
 │   │
 │   └── 📁 test
@@ -189,14 +192,19 @@ mvn test
 │           └── 📁 com
 │               └── 📁 apps
 │                   └── 📁 quantitymeasurement
-│                       ├── QuantityEqualityTest.java
-│                       ├── QuantityConversionTest.java
-│                       ├── QuantityArithmeticTest.java
-│                       ├── CentralizedArithmeticLogicTest.java
-│                       ├── TemperatureQuantityTest.java
-│                       ├── BackwardCompatibilityTest.java
-│                       └── ArchitecturalTest.java
-│
+│                         └── FeetEqualityTest.java
+│                         └── GenericQuantityTest.java
+│                         └── InchEqualityTest.java
+│                         └── QuantityLengthTest.java
+│                         └── QuantityWeightTest.java
+│                         └── QuantityWeightTest.java
+│                         └── SubtractionDivisionTest.java
+│                         └── TargetAdditionTest.java
+│                         └── TemperatureUnitTest.java
+│                         └── UnitAdditionTest.java
+│                         └── UnitConversionTest.java
+│                         └── VolumeTest.java
+│                         └── YardEqualityTest.java
 ├── pom.xml
 ├── .gitignore
 └── README.md
