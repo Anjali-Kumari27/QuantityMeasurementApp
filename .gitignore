@@ -20,3 +20,6 @@ target/
 # Windows System Files
 Thumbs.db
 Desktop.ini
+
+# Serialized repository history file
+quantity-measurement-history.ser
