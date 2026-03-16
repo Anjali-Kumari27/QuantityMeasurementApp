@@ -1,25 +1,35 @@
 # Quantity Measurement App  
-## UC14 – Temperature Measurement with Selective Arithmetic Support  
+## UC15 – N-Tier Architecture Refactoring for Quantity Measurement Application  
 
 ---
 
-**Branch:** feature/UC14-TemperatureMeasurement 
-**Date:** 23 February 2026  
+Branch: feature/UC15-NTierArchitectureRefactoring  
+Date: 11 March 2026  
 
 ---
 
 ## Overview  
-- This use case extends the system to support Temperature measurements alongside Length, Weight, and Volume.
 
-- Unlike other measurement categories, Temperature has non-linear conversion rules and does not support all arithmetic operations in a meaningful way.
+- UC15 refactors the Quantity Measurement Application into a **clean N-Tier (Layered) Architecture**.
 
-- UC14 introduces selective arithmetic capability by refactoring the IMeasurable interface using default methods. TemperatureUnit supports equality comparison and conversion but restricts unsupported arithmetic operations.
+- Earlier use cases contained most of the logic within a single structure. UC15 restructures the system into **separate layers for controller, service, model, and data transfer objects**.
 
-- This enhancement preserves backward compatibility with UC1–UC13 while making the architecture capable of handling categories with unique operational constraints.
+- This architectural refactoring improves **separation of concerns, maintainability, scalability, and testability**.
+
+- The application now follows a standard enterprise structure where:
+  - Controller handles client interaction
+  - Service handles business logic
+  - Model represents the domain objects
+  - DTO acts as a data transfer layer between components
+
+- UC15 prepares the system for **database integration and persistence**, which will be implemented in UC16.
+
+- All functionality from **UC1–UC14 remains unchanged** and continues to work within the new layered structure.
 
 ---
 
 ## Project Structure  
+  
 ```
 src  
  ├── main  
@@ -27,35 +37,27 @@ src
  │         └── com/
  │              └── apps/
  │                   └── quantitymeasurement
- │                         └── Feet.java
- │                         └── IMeasurable.java
- │                         └── Inch.java
- │                         └── LengthUnit.java
- │                         └── QuantityLength.java
- │                         └── QuantityMeasurementApp.java
- │                         └── QuantityWeight.java
- │                         └── TemperatureUnit.java
- │                         └── VolumeUnit.java
- │                         └── WeightUnit.java
+ │                         └── controller/
+ │                         └── dto/
+ │                         └── exception/
+ │                         └── interfaces/
+ │                         └── model/
+ │                         └── repository/
+ │                         └── service/
+ │                         └── units/
+ │                         └── QuantityMeasurementApp.jav
  │  
  └── test  
  │    └── java/
  │         └── com/
  │              └── apps/
  │                   └── quantitymeasurement
- │                         └── FeetEqualityTest.java
- │                         └── GenericQuantityTest.java
- │                         └── InchEqualityTest.java
- │                         └── QuantityLengthTest.java
- │                         └── QuantityWeightTest.java
- │                         └── QuantityWeightTest.java
- │                         └── SubtractionDivisionnTest.java
- │                         └── TargetAdditionTest.java
- │                         └── TemperatureUnitTest.java
- │                         └── UnitAdditionTest.java
- │                         └── UnitConversionTest.java
- │                         └── VolumeTest.java
- │                         └── YardEqualityTest.java
+ │                         └── controller/
+ │                         └── integration/
+ │                         └── model/
+ │                         └── repository/
+ │                         └── service/
+ │                         └── units/
  │
  ├── .gitignore
  └── pom.xml
@@ -65,79 +67,83 @@ src
 ---
 
 ## Features  
-- TemperatureUnit enum introduced  
-- Supports CELSIUS, FAHRENHEIT (optional KELVIN)  
-- Non-linear conversion formulas implemented  
-- I̲M̲e̲a̲s̲u̲r̲a̲b̲l̲e̲ refactored with default operation validation methods  
-- Selective arithmetic capability enforcement  
-- Temperature supports equality and conversion  
-- Temperature blocks addition, subtraction, division  
-- Unsupported operations throw UnsupportedOperationException  
-- Cross-category comparison remains prohibited  
-- Backward compatibility maintained with UC1–UC13  
-- Architecture supports future constrained categories  
+
+- Application refactored into **N-Tier architecture**  
+- Introduction of **controller layer** for client interaction  
+- Introduction of **service layer** for business logic  
+- DTO introduced for **safe data transfer between layers**  
+- Domain models separated from service logic  
+- Improved separation of concerns  
+- Improved maintainability and scalability  
+- Preparation for database persistence in UC16  
+- Existing functionality preserved without modification  
+- Clean architecture ready for enterprise-grade development  
 
 ---
 
 ## Example Operations  
-- Quantity(0.0, CELSIUS).equals(Quantity(32.0, FAHRENHEIT)) → true  
-- Quantity(100.0, CELSIUS).equals(Quantity(212.0, FAHRENHEIT)) → true  
-- Quantity(-40.0, CELSIUS).equals(Quantity(-40.0, FAHRENHEIT)) → true  
-- Quantity(100.0, CELSIUS).convertTo(FAHRENHEIT) → Quantity(212.0, FAHRENHEIT)  
-- Quantity(32.0, FAHRENHEIT).convertTo(CELSIUS) → Quantity(0.0, CELSIUS)  
-- Quantity(0.0, CELSIUS).convertTo(KELVIN) → Quantity(273.15, KELVIN)  
 
-Unsupported Operations  
-- Quantity(100.0, CELSIUS).add(Quantity(50.0, CELSIUS)) → UnsupportedOperationException  
-- Quantity(100.0, CELSIUS).subtract(Quantity(50.0, CELSIUS)) → UnsupportedOperationException  
-- Quantity(100.0, CELSIUS).divide(Quantity(50.0, CELSIUS)) → UnsupportedOperationException  
+Controller receives request  
+
+QuantityMeasurementController → calls service layer  
+
+Service performs business logic  
+
+QuantityMeasurementService → processes conversion / equality / arithmetic  
+
+Service returns result  
+
+Controller returns final response to client  
+
+Examples  
+
+Quantity(1.0, FEET).add(Quantity(12.0, INCHES)) → Quantity(2.0, FEET)  
+
+Quantity(10.0, KILOGRAM).subtract(Quantity(5000.0, GRAM)) → Quantity(5.0, KILOGRAM)  
+
+Quantity(24.0, INCHES).divide(Quantity(2.0, FEET)) → 1.0  
 
 ---
 
 ## Test Coverage  
-- Celsius-to-Celsius equality  
-- Fahrenheit-to-Fahrenheit equality  
-- Celsius-to-Fahrenheit cross equality  
-- Celsius-to-Kelvin equality  
-- Symmetric and transitive equality validation  
-- Temperature conversion accuracy (C ↔ F, C ↔ K)  
-- Round-trip conversion precision  
-- Unsupported addition validation  
-- Unsupported subtraction validation  
-- Unsupported division validation  
-- Clear error message verification  
-- Cross-category comparison prevention  
-- Backward compatibility validation (UC1–UC13 regression tests)  
-- Default method inheritance validation for other units  
-- Epsilon-based precision testing  
+
+- Controller layer interaction testing  
+- Service layer business logic validation  
+- DTO mapping validation  
+- Cross-unit arithmetic validation  
+- Conversion accuracy validation  
+- Equality comparison validation  
+- Error handling validation  
+- Layer interaction testing  
+- Backward compatibility validation (UC1–UC14 regression tests)  
 
 ---
 
 ## Key Concepts  
-- Selective arithmetic capability  
-- Default methods in interfaces  
-- Interface Segregation Principle (ISP) improvement  
-- Non-linear conversion handling  
-- Capability-based design  
-- Exception semantics (UnsupportedOperationException)  
-- Backward-compatible interface evolution  
-- Generic type safety  
-- Scalable architecture for constrained categories  
-- Polymorphic behavior via enum  
+
+- N-Tier Architecture  
+- Layered application design  
+- Separation of concerns  
+- DTO (Data Transfer Object) pattern  
+- Controller-Service interaction  
+- Clean architecture principles  
+- Scalable enterprise design  
+- Maintainable code structure  
+- Dependency management between layers  
+- Preparation for persistence layer  
 
 ---
 
 ## Design Strength  
-- TemperatureUnit encapsulates non-linear conversion formulas.  
-- IMeasurable evolves without breaking existing unit implementations.  
-- Quantity validates operation support before executing arithmetic.  
-- Length, Weight, and Volume remain unchanged.  
-- Selective arithmetic constraints enforced cleanly.  
-- Architecture remains DRY and centralized (UC13 preserved).  
-- Future categories with unique constraints can integrate seamlessly.  
-- All previous functionality preserved without modification.  
+
+- Controller layer handles client interaction.  
+- Service layer encapsulates business logic.  
+- Model layer represents measurement domain objects.  
+- DTO ensures safe data transfer across layers.  
+- Business logic isolated from UI and persistence concerns.  
+- Architecture becomes easier to test and maintain.  
+- Clean structure prepares the application for database integration.  
+- All previous measurement features remain unchanged.  
+- System now follows enterprise-level architectural practices.  
 
 ---
-
-🔗 *Code Link* 
- [TemperatureMeasurement](https://github.com/Anjali-Kumari27/QuantityMeasurementApp/tree/feature/UC14-TemperatureMeasurement)
