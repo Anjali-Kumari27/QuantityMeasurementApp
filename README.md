@@ -1,143 +1,143 @@
 # Quantity Measurement App  
-## UC14 – Temperature Measurement with Selective Arithmetic Support  
+## UC16 – Database Integration with JDBC for Quantity Measurement Persistence  
 
 ---
 
-**Branch:** feature/UC14-TemperatureMeasurement 
-**Date:** 23 February 2026  
+Branch: feature/UC16-DatabaseIntegrationWithJDBC  
+Date: 12 March 2026  
 
 ---
 
 ## Overview  
-- This use case extends the system to support Temperature measurements alongside Length, Weight, and Volume.
 
-- Unlike other measurement categories, Temperature has non-linear conversion rules and does not support all arithmetic operations in a meaningful way.
+- UC16 introduces **database persistence** to the Quantity Measurement Application.
 
-- UC14 introduces selective arithmetic capability by refactoring the IMeasurable interface using default methods. TemperatureUnit supports equality comparison and conversion but restricts unsupported arithmetic operations.
+- Until UC15, all quantity operations (conversion, equality, arithmetic) were executed **only in memory**.
 
-- This enhancement preserves backward compatibility with UC1–UC13 while making the architecture capable of handling categories with unique operational constraints.
+- This use case integrates **JDBC (Java Database Connectivity)** to persist quantity data in a relational database.
+
+- The application now supports storing and retrieving quantity measurements through a **dedicated persistence layer** following layered architecture principles.
+
+- UC16 introduces repository classes, database configuration, and connection pooling while keeping business logic separate from persistence logic.
+
+- This enhancement maintains backward compatibility with **UC1–UC15** and prepares the system for scalable data management.
 
 ---
 
 ## Project Structure  
 ```
-src  
- ├── main  
- │    └── java/
- │         └── com/
- │              └── apps/
- │                   └── quantitymeasurement
- │                         └── Feet.java
- │                         └── IMeasurable.java
- │                         └── Inch.java
- │                         └── LengthUnit.java
- │                         └── QuantityLength.java
- │                         └── QuantityMeasurementApp.java
- │                         └── QuantityWeight.java
- │                         └── TemperatureUnit.java
- │                         └── VolumeUnit.java
- │                         └── WeightUnit.java
- │  
- └── test  
- │    └── java/
- │         └── com/
- │              └── apps/
- │                   └── quantitymeasurement
- │                         └── FeetEqualityTest.java
- │                         └── GenericQuantityTest.java
- │                         └── InchEqualityTest.java
- │                         └── QuantityLengthTest.java
- │                         └── QuantityWeightTest.java
- │                         └── QuantityWeightTest.java
- │                         └── SubtractionDivisionnTest.java
- │                         └── TargetAdditionTest.java
- │                         └── TemperatureUnitTest.java
- │                         └── UnitAdditionTest.java
- │                         └── UnitConversionTest.java
- │                         └── VolumeTest.java
- │                         └── YardEqualityTest.java
- │
- ├── .gitignore
- └── pom.xml
+src
+├── main
+│ └── java/
+│      └── com/
+│       └── app/
+│         └── quantitymeasurement
+│          ├── controller
+│          │ └── QuantityMeasurementController.java
+│          │
+│          ├── service
+│          │ ├── IQuantityMeasurementService.java
+│          │ └── QuantityMeasurementServiceImpl.java
+│          │
+│          ├── repository
+│          │ ├── IQuantityRepository.java
+│          │ └── QuantityMeasurementDatabaseRepository.java
+│          │
+│          ├── entity
+│          │ ├── QuantityEntity.java
+│          │ ├── QuantityModel.java
+│          │ └── QuantityDTO.java
+│          │
+│          └── QuantityMeasurementApp.java
+│
+└── test
+│    └── java/
+│         └── com/
+│           └── app/
+│            └── quantitymeasurement/
+│
+├── .gitignore
+└── pom.xml
 
 ```
 
----
-
 ## Features  
-- TemperatureUnit enum introduced  
-- Supports CELSIUS, FAHRENHEIT (optional KELVIN)  
-- Non-linear conversion formulas implemented  
-- I̲M̲e̲a̲s̲u̲r̲a̲b̲l̲e̲ refactored with default operation validation methods  
-- Selective arithmetic capability enforcement  
-- Temperature supports equality and conversion  
-- Temperature blocks addition, subtraction, division  
-- Unsupported operations throw UnsupportedOperationException  
-- Cross-category comparison remains prohibited  
-- Backward compatibility maintained with UC1–UC13  
-- Architecture supports future constrained categories  
+
+- JDBC-based database integration  
+- Quantity measurements persisted in relational database  
+- Repository layer introduced for data access  
+- Separation of concerns between controller, service, and repository  
+- Connection pooling configuration for efficient database access  
+- Parameterized SQL queries for secure database operations  
+- Database schema design for quantity storage  
+- DTO and entity classes introduced for persistence mapping  
+- Centralized configuration management for database connection  
+- Test support using mock or in-memory databases  
+- Backward compatibility maintained with UC1–UC15  
 
 ---
 
 ## Example Operations  
-- Quantity(0.0, CELSIUS).equals(Quantity(32.0, FAHRENHEIT)) → true  
-- Quantity(100.0, CELSIUS).equals(Quantity(212.0, FAHRENHEIT)) → true  
-- Quantity(-40.0, CELSIUS).equals(Quantity(-40.0, FAHRENHEIT)) → true  
-- Quantity(100.0, CELSIUS).convertTo(FAHRENHEIT) → Quantity(212.0, FAHRENHEIT)  
-- Quantity(32.0, FAHRENHEIT).convertTo(CELSIUS) → Quantity(0.0, CELSIUS)  
-- Quantity(0.0, CELSIUS).convertTo(KELVIN) → Quantity(273.15, KELVIN)  
 
-Unsupported Operations  
-- Quantity(100.0, CELSIUS).add(Quantity(50.0, CELSIUS)) → UnsupportedOperationException  
-- Quantity(100.0, CELSIUS).subtract(Quantity(50.0, CELSIUS)) → UnsupportedOperationException  
-- Quantity(100.0, CELSIUS).divide(Quantity(50.0, CELSIUS)) → UnsupportedOperationException  
+Save Quantity Measurement  
+
+Quantity(12.0, INCHES) → Stored in database  
+
+Retrieve Quantity Measurement  
+
+Database Record → Quantity(12.0, INCHES)  
+
+Convert Quantity After Retrieval  
+
+Quantity(12.0, INCHES).convertTo(FEET) → Quantity(1.0, FEET)  
+
+Arithmetic Using Persisted Data  
+
+Quantity(1.0, FEET).add(Quantity(12.0, INCHES)) → Quantity(2.0, FEET)  
 
 ---
 
 ## Test Coverage  
-- Celsius-to-Celsius equality  
-- Fahrenheit-to-Fahrenheit equality  
-- Celsius-to-Fahrenheit cross equality  
-- Celsius-to-Kelvin equality  
-- Symmetric and transitive equality validation  
-- Temperature conversion accuracy (C ↔ F, C ↔ K)  
-- Round-trip conversion precision  
-- Unsupported addition validation  
-- Unsupported subtraction validation  
-- Unsupported division validation  
-- Clear error message verification  
-- Cross-category comparison prevention  
-- Backward compatibility validation (UC1–UC13 regression tests)  
-- Default method inheritance validation for other units  
-- Epsilon-based precision testing  
+
+- Database connection validation  
+- Repository save operation  
+- Repository retrieval operation  
+- Entity to DTO mapping validation  
+- DTO to entity conversion validation  
+- SQL query execution validation  
+- Connection pooling configuration validation  
+- Service layer integration testing  
+- Persistence layer error handling validation  
+- Database transaction consistency tests  
+- Backward compatibility validation with UC1–UC15  
 
 ---
 
 ## Key Concepts  
-- Selective arithmetic capability  
-- Default methods in interfaces  
-- Interface Segregation Principle (ISP) improvement  
-- Non-linear conversion handling  
-- Capability-based design  
-- Exception semantics (UnsupportedOperationException)  
-- Backward-compatible interface evolution  
-- Generic type safety  
-- Scalable architecture for constrained categories  
-- Polymorphic behavior via enum  
+
+- JDBC (Java Database Connectivity)  
+- Repository pattern  
+- Layered architecture  
+- Data persistence design  
+- Connection pooling  
+- Parameterized SQL queries  
+- DTO and entity separation  
+- Transaction management  
+- Configuration management  
+- Resource management and exception hierarchy  
 
 ---
 
 ## Design Strength  
-- TemperatureUnit encapsulates non-linear conversion formulas.  
-- IMeasurable evolves without breaking existing unit implementations.  
-- Quantity validates operation support before executing arithmetic.  
-- Length, Weight, and Volume remain unchanged.  
-- Selective arithmetic constraints enforced cleanly.  
-- Architecture remains DRY and centralized (UC13 preserved).  
-- Future categories with unique constraints can integrate seamlessly.  
-- All previous functionality preserved without modification.  
+
+- Persistence layer isolated from business logic.  
+- Repository pattern simplifies database operations.  
+- Controller, service, and repository layers clearly separated.  
+- Database configuration centralized for maintainability.  
+- Connection pooling improves performance and scalability.  
+- Parameterized queries ensure security and prevent SQL injection.  
+- DTO and entity separation improves data abstraction.  
+- Architecture ready for future integration with ORM frameworks.  
+- All previous system functionality preserved without modification.  
 
 ---
-
-🔗 *Code Link* 
- [TemperatureMeasurement](https://github.com/Anjali-Kumari27/QuantityMeasurementApp/tree/feature/UC14-TemperatureMeasurement)
