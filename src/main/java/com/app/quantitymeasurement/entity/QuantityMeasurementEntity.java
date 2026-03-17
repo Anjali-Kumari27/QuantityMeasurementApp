@@ -3,105 +3,167 @@ package com.app.quantitymeasurement.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * UC15: QuantityMeasurementEntity is the persistence model used to store
- * quantity operation history in the repository layer.
+/*
+ * UC16: QuantityMeasurementEntity
  *
- * Responsibilities: 
- * - Stores details of operations such as compare, convert, add, subtract, divide 
- * - Captures operands, result, error state, and timestamp
- * - Provides a serializable record for repository persistence
+ * This entity represents a quantity measurement operation record
+ * that is stored in the database.
  *
- * Why Entity is Needed: 
- * - Maintains operation audit/history 
- * - Supports logging and debugging 
- * - Allows persistence across application restarts
- *
- * Architectural Role: This class is part of the Entity/Persistence layer and
- * should remain separate from DTO and internal model classes.
- *
- * Design Considerations: - Serializable for disk storage 
- * - Immutable-style constructor initialization 
- * - Clear distinction between success and error
- * states
+ * It keeps the input values, input measurement types, operation name,
+ * result details, error information, and timestamps.
  */
-
 public class QuantityMeasurementEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
 
-    private final String operationType;
-    private final String firstOperand;
-    private final String secondOperand;
-    private final String result;
-    private final boolean error;
-    private final String errorMessage;
-    private final LocalDateTime timestamp;
+	private static final long serialVersionUID = 1L;
 
-    public QuantityMeasurementEntity(String operationType, String firstOperand, String result) {
-        this(operationType, firstOperand, null, result, false, null);
-    }
+	private long id;
 
-    public QuantityMeasurementEntity(String operationType, String firstOperand, String secondOperand, String result) {
-        this(operationType, firstOperand, secondOperand, result, false, null);
-    }
+	private double thisValue;
+	private String thisMeasurementType;
 
-    public QuantityMeasurementEntity(String operationType,
-                                     String firstOperand,
-                                     String secondOperand,
-                                     String result,
-                                     boolean error,
-                                     String errorMessage) {
-        this.operationType = operationType;
-        this.firstOperand = firstOperand;
-        this.secondOperand = secondOperand;
-        this.result = result;
-        this.error = error;
-        this.errorMessage = errorMessage;
-        this.timestamp = LocalDateTime.now();
-    }
+	private double thatValue;
+	private String thatMeasurementType;
 
-    public String getOperationType() {
-        return operationType;
-    }
+	private String operation;
 
-    public String getFirstOperand() {
-        return firstOperand;
-    }
+	private double resultValue;
+	private String resultUnit;
+	private String resultMeasurementType;
 
-    public String getSecondOperand() {
-        return secondOperand;
-    }
+	private String resultString;
 
-    public String getResult() {
-        return result;
-    }
+	private boolean error;
+	private String errorMessage;
 
-    public boolean isError() {
-        return error;
-    }
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
+	public QuantityMeasurementEntity() {
+	}
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
+	public long getId() {
+		return id;
+	}
 
-    @Override
-    public String toString() {
-        if (error) {
-            return "[ERROR] time=" + timestamp
-                    + ", operation=" + operationType
-                    + ", first=" + firstOperand
-                    + ", second=" + secondOperand
-                    + ", message=" + errorMessage;
-        }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-        return "[SUCCESS] time=" + timestamp
-                + ", operation=" + operationType
-                + ", first=" + firstOperand
-                + ", second=" + secondOperand
-                + ", result=" + result;
-    }
+	public double getThisValue() {
+		return thisValue;
+	}
+
+	public void setThisValue(double thisValue) {
+		this.thisValue = thisValue;
+	}
+
+	public String getThisMeasurementType() {
+		return thisMeasurementType;
+	}
+
+	public void setThisMeasurementType(String thisMeasurementType) {
+		this.thisMeasurementType = thisMeasurementType;
+	}
+
+	public double getThatValue() {
+		return thatValue;
+	}
+
+	public void setThatValue(double thatValue) {
+		this.thatValue = thatValue;
+	}
+
+	public String getThatMeasurementType() {
+		return thatMeasurementType;
+	}
+
+	public void setThatMeasurementType(String thatMeasurementType) {
+		this.thatMeasurementType = thatMeasurementType;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public double getResultValue() {
+		return resultValue;
+	}
+
+	public void setResultValue(double resultValue) {
+		this.resultValue = resultValue;
+	}
+
+	public String getResultUnit() {
+		return resultUnit;
+	}
+
+	public void setResultUnit(String resultUnit) {
+		this.resultUnit = resultUnit;
+	}
+
+	public String getResultMeasurementType() {
+		return resultMeasurementType;
+	}
+
+	public void setResultMeasurementType(String resultMeasurementType) {
+		this.resultMeasurementType = resultMeasurementType;
+	}
+
+	public String getResultString() {
+		return resultString;
+	}
+
+	public void setResultString(String resultString) {
+		this.resultString = resultString;
+	}
+
+	public boolean isError() {
+		return error;
+	}
+
+	public void setError(boolean error) {
+		this.error = error;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	@Override
+	public String toString() {
+		if (error) {
+			return "[ERROR] operation=" + operation + ", thisValue=" + thisValue + ", thisMeasurementType="
+					+ thisMeasurementType + ", thatValue=" + thatValue + ", thatMeasurementType=" + thatMeasurementType
+					+ ", errorMessage=" + errorMessage;
+		}
+
+		return "[SUCCESS] operation=" + operation + ", thisValue=" + thisValue + ", thisMeasurementType="
+				+ thisMeasurementType + ", thatValue=" + thatValue + ", thatMeasurementType=" + thatMeasurementType
+				+ ", resultValue=" + resultValue + ", resultUnit=" + resultUnit + ", resultMeasurementType="
+				+ resultMeasurementType + ", resultString=" + resultString;
+	}
 }

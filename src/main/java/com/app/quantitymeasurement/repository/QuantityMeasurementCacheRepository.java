@@ -14,27 +14,13 @@ import java.util.List;
 import com.app.quantitymeasurement.entity.QuantityMeasurementEntity;
 import com.app.quantitymeasurement.exception.QuantityMeasurementException;
 
-/**
- * UC15: QuantityMeasurementCacheRepository is the singleton repository
- * implementation for storing quantity measurement history.
+/*
+ * UC16: QuantityMeasurementCacheRepository
  *
- * Responsibilities:
- * - Maintains in-memory cache of QuantityMeasurementEntity records
- * - Persists history to disk using Java serialization
- * - Loads stored history at startup
- * - Provides centralized access to measurement history
+ * This repository implementation stores quantity measurement history
+ * in memory and persists it to disk using Java serialization.
  *
- * Architectural Role:
- * This class belongs to the Repository Layer and implements
- * IQuantityMeasurementRepository.
- *
- * Design Pattern Used:
- * - Singleton Pattern
- *
- * Why Singleton:
- * - Ensures one shared repository instance across the application
- * - Provides consistent centralized storage
- * - Supports predictable state management
+ * It provides a lightweight alternative to the database repository.
  */
 public class QuantityMeasurementCacheRepository implements IQuantityMeasurementRepository {
 
@@ -68,12 +54,44 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
 	}
 
 	@Override
-	public synchronized List<QuantityMeasurementEntity> findAll() {
+	public synchronized List<QuantityMeasurementEntity> getAllMeasurements() {
 		return new ArrayList<>(history);
 	}
 
 	@Override
-	public synchronized void clear() {
+	public synchronized List<QuantityMeasurementEntity> getMeasurementsByOperation(String operation) {
+		List<QuantityMeasurementEntity> result = new ArrayList<>();
+
+		for (QuantityMeasurementEntity entity : history) {
+			if (entity.getOperation() != null && entity.getOperation().equalsIgnoreCase(operation)) {
+				result.add(entity);
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public synchronized List<QuantityMeasurementEntity> getMeasurementsByType(String measurementType) {
+		List<QuantityMeasurementEntity> result = new ArrayList<>();
+
+		for (QuantityMeasurementEntity entity : history) {
+			if (entity.getThisMeasurementType() != null
+					&& entity.getThisMeasurementType().equalsIgnoreCase(measurementType)) {
+				result.add(entity);
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public synchronized int getTotalCount() {
+		return history.size();
+	}
+
+	@Override
+	public synchronized void deleteAll() {
 		history.clear();
 
 		if (storageFile.exists() && !storageFile.delete()) {
@@ -81,19 +99,23 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
 		}
 	}
 
-	/**
-	 * Saves a single entity to disk using append mode.
-	 * Uses AppendableObjectOutputStream when file already contains data
-	 * to avoid writing duplicate stream headers.
-	 */
+	@Override
+	public synchronized String getPoolStatistics() {
+		return "Cache repository does not use a connection pool.";
+	}
+
+	@Override
+	public synchronized void releaseResources() {
+		// No DB resources to release for cache repository
+	}
+
 	private void saveToDisk(QuantityMeasurementEntity entity) {
 		try {
 			boolean append = storageFile.exists() && storageFile.length() > 0;
 
 			try (FileOutputStream fileOutputStream = new FileOutputStream(storageFile, true);
-				 ObjectOutputStream objectOutputStream = append
-						 ? new AppendableObjectOutputStream(fileOutputStream)
-						 : new ObjectOutputStream(fileOutputStream)) {
+					ObjectOutputStream objectOutputStream = append ? new AppendableObjectOutputStream(fileOutputStream)
+							: new ObjectOutputStream(fileOutputStream)) {
 
 				objectOutputStream.writeObject(entity);
 			}
@@ -103,10 +125,6 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
 		}
 	}
 
-	/**
-	 * Loads all previously saved entities from disk into in-memory cache.
-	 * Reads serialized objects one by one until EOF is reached.
-	 */
 	private void loadFromDisk() {
 		if (!storageFile.exists() || storageFile.length() == 0) {
 			return;
@@ -127,14 +145,11 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
 			}
 
 		} catch (IOException | ClassNotFoundException e) {
+			System.out.println("Old repository data is incompatible. Starting with empty history.");
 			history.clear();
 		}
 	}
 
-	/**
-	 * Custom ObjectOutputStream that skips writing the header
-	 * when appending to an existing serialization file.
-	 */
 	private static class AppendableObjectOutputStream extends ObjectOutputStream {
 
 		public AppendableObjectOutputStream(OutputStream outputStream) throws IOException {

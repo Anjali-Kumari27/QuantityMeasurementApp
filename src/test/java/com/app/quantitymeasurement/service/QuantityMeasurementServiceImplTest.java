@@ -13,6 +13,19 @@ import com.app.quantitymeasurement.entity.QuantityMeasurementEntity;
 import com.app.quantitymeasurement.exception.QuantityMeasurementException;
 import com.app.quantitymeasurement.repository.IQuantityMeasurementRepository;
 
+/*
+ * UC16: QuantityMeasurementServiceImplTest
+ *
+ * This test class verifies service-layer business logic.
+ *
+ * It checks:
+ * - comparison logic
+ * - conversion logic
+ * - arithmetic operations
+ * - invalid scenarios (errors)
+ *
+ * A fake in-memory repository is used for isolation.
+ */
 public class QuantityMeasurementServiceImplTest {
 
 	private static final double EPS = 1e-6;
@@ -22,6 +35,9 @@ public class QuantityMeasurementServiceImplTest {
 
 	@BeforeEach
 	void setUp() {
+		/*
+		 * Step 1: initialize fake repository Step 2: inject into service
+		 */
 		repository = new TestRepository();
 		service = new QuantityMeasurementServiceImpl(repository);
 	}
@@ -99,6 +115,11 @@ public class QuantityMeasurementServiceImplTest {
 						new QuantityDTO(0.0, QuantityDTO.LengthUnit.FEET)));
 	}
 
+	/*
+	 * Fake repository implementation for testing service layer.
+	 *
+	 * Only minimal logic is implemented.
+	 */
 	private static class TestRepository implements IQuantityMeasurementRepository {
 
 		private final List<QuantityMeasurementEntity> data = new ArrayList<>();
@@ -109,13 +130,51 @@ public class QuantityMeasurementServiceImplTest {
 		}
 
 		@Override
-		public List<QuantityMeasurementEntity> findAll() {
+		public List<QuantityMeasurementEntity> getAllMeasurements() {
 			return data;
 		}
 
 		@Override
-		public void clear() {
+		public void deleteAll() {
 			data.clear();
+		}
+
+		@Override
+		public int getTotalCount() {
+			return data.size();
+		}
+
+		@Override
+		public List<QuantityMeasurementEntity> getMeasurementsByOperation(String operation) {
+			return data;
+		}
+
+		@Override
+		public List<QuantityMeasurementEntity> getMeasurementsByType(String type) {
+			return data;
+		}
+
+		@Override
+		public String getPoolStatistics() {
+			return "Test repository";
+		}
+
+		@Override
+		public void releaseResources() {
+			// nothing to release
+		}
+
+		/*
+		 * Compatibility methods (optional but safe)
+		 */
+		@Override
+		public List<QuantityMeasurementEntity> findAll() {
+			return getAllMeasurements();
+		}
+
+		@Override
+		public void clear() {
+			deleteAll();
 		}
 	}
 }

@@ -53,10 +53,11 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
 			boolean result = firstQuantity.equals(secondQuantity);
 
-			repository.save(new QuantityMeasurementEntity("COMPARE", first.toString(), second.toString(),
-					String.valueOf(result)));
+			QuantityDTO response = new QuantityDTO(result ? 1.0 : 0.0, first.getUnit());
 
-			return new QuantityDTO(result ? 1.0 : 0.0, first.getUnit());
+			repository.save(buildEntity("COMPARE", first, second, response, false, null));
+
+			return response;
 
 		} catch (Exception e) {
 			throw saveAndWrap("COMPARE", first, second, e);
@@ -75,7 +76,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 			Quantity<IMeasurable> result = sourceQuantity.convertTo(targetUnit);
 			QuantityDTO response = toDTO(result);
 
-			repository.save(new QuantityMeasurementEntity("CONVERT", source.toString(), response.toString()));
+			repository.save(buildEntity("CONVERT", source, target, response, false, null));
 
 			return response;
 
@@ -105,8 +106,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
 			QuantityDTO response = toDTO(result);
 
-			repository.save(
-					new QuantityMeasurementEntity("ADD", first.toString(), second.toString(), response.toString()));
+			repository.save(buildEntity("ADD", first, second, response, false, null));
 
 			return response;
 
@@ -136,8 +136,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
 			QuantityDTO response = toDTO(result);
 
-			repository.save(new QuantityMeasurementEntity("SUBTRACT", first.toString(), second.toString(),
-					response.toString()));
+			repository.save(buildEntity("SUBTRACT", first, second, response, false, null));
 
 			return response;
 
@@ -159,10 +158,11 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
 			double result = firstQuantity.divide(secondQuantity);
 
-			repository.save(new QuantityMeasurementEntity("DIVIDE", first.toString(), second.toString(),
-					String.valueOf(result)));
+			QuantityDTO response = new QuantityDTO(result, first.getUnit());
 
-			return new QuantityDTO(result, first.getUnit());
+			repository.save(buildEntity("DIVIDE", first, second, response, false, null));
+
+			return response;
 
 		} catch (Exception e) {
 			throw saveAndWrap("DIVIDE", first, second, e);
@@ -246,9 +246,36 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
 	private QuantityMeasurementException saveAndWrap(String operation, QuantityDTO first, QuantityDTO second,
 			Exception e) {
-		repository.save(new QuantityMeasurementEntity(operation, first != null ? first.toString() : null,
-				second != null ? second.toString() : null, null, true, e.getMessage()));
-
+		repository.save(buildEntity(operation, first, second, null, true, e.getMessage()));
 		return new QuantityMeasurementException(e.getMessage(), e);
+	}
+
+	private QuantityMeasurementEntity buildEntity(String operation, QuantityDTO first, QuantityDTO second,
+			QuantityDTO result, boolean isError, String errorMessage) {
+		QuantityMeasurementEntity entity = new QuantityMeasurementEntity();
+
+		entity.setOperation(operation);
+
+		if (first != null) {
+			entity.setThisValue(first.getValue());
+			entity.setThisMeasurementType(first.getMeasurementType());
+		}
+
+		if (second != null) {
+			entity.setThatValue(second.getValue());
+			entity.setThatMeasurementType(second.getMeasurementType());
+		}
+
+		if (result != null) {
+			entity.setResultValue(result.getValue());
+			entity.setResultUnit(result.getUnitName());
+			entity.setResultMeasurementType(result.getMeasurementType());
+			entity.setResultString(result.toString());
+		}
+
+		entity.setError(isError);
+		entity.setErrorMessage(errorMessage);
+
+		return entity;
 	}
 }

@@ -2,6 +2,7 @@ package com.app.quantitymeasurement;
 
 import java.util.List;
 import java.util.logging.Logger;
+
 import com.app.quantitymeasurement.controller.QuantityMeasurementController;
 import com.app.quantitymeasurement.entity.QuantityDTO;
 import com.app.quantitymeasurement.entity.QuantityMeasurementEntity;
@@ -9,101 +10,114 @@ import com.app.quantitymeasurement.exception.QuantityMeasurementException;
 import com.app.quantitymeasurement.repository.IQuantityMeasurementRepository;
 import com.app.quantitymeasurement.repository.QuantityMeasurementCacheRepository;
 import com.app.quantitymeasurement.repository.QuantityMeasurementDatabaseRepository;
-import com.app.quantitymeasurement.service.IQuantityMeasurementService;
 import com.app.quantitymeasurement.service.QuantityMeasurementServiceImpl;
-import com.app.quantitymeasurement.util.DatabaseConfig;
+import com.app.quantitymeasurement.util.ApplicationConfig;
 
 /*
  * UC16: QuantityMeasurementApp
  *
  * This is the main entry point of the Quantity Measurement application.
- * It initializes the application components such as repository, service,
- * and controller layers.
+ * It initializes repository, service, and controller layers and demonstrates
+ * quantity measurement operations.
  *
- * Responsibilities:
- * - Start the application
- * - Configure repository type (cache or database)
- * - Demonstrate measurement operations such as comparison, conversion,
- *   addition, subtraction and division
- * - Display operation history
- *
- * This class does not contain business logic. It only coordinates
- * different layers of the application.
+ * This class does not contain business logic. It coordinates the layers.
  */
-
 public class QuantityMeasurementApp {
 
-	// Logger for logging information and errors in the Application class
 	private static final Logger logger = Logger.getLogger(QuantityMeasurementApp.class.getName());
 
-	public static void main(String[] args) {
+	private static QuantityMeasurementApp instance;
 
+	private final IQuantityMeasurementRepository repository;
+	private final QuantityMeasurementController controller;
+
+	/*
+	 * Private constructor to initialize application components.
+	 */
+	private QuantityMeasurementApp() {
+		this.repository = createRepository();
+
+		QuantityMeasurementServiceImpl service = new QuantityMeasurementServiceImpl(this.repository);
+
+		this.controller = new QuantityMeasurementController(service);
+
+		logger.info("Quantity Measurement Application initialized with " + this.repository.getClass().getSimpleName());
+	}
+
+	/*
+	 * Returns singleton instance of the application.
+	 */
+	public static synchronized QuantityMeasurementApp getInstance() {
+		if (instance == null) {
+			instance = new QuantityMeasurementApp();
+		}
+		return instance;
+	}
+
+	public static void main(String[] args) {
 		logger.info("Starting Quantity Measurement Application...");
 
-		IQuantityMeasurementRepository repository = createRepository();
-		IQuantityMeasurementService service = new QuantityMeasurementServiceImpl(repository);
-		QuantityMeasurementController controller = new QuantityMeasurementController(service);
+		QuantityMeasurementApp app = getInstance();
+		QuantityMeasurementController controller = app.controller;
 
 		try {
+			// optional: clear history for a clean demo run
+			app.repository.clear();
 
-			QuantityDTO feet = new QuantityDTO(1.0, QuantityDTO.LengthUnit.FEET);
+			QuantityDTO quantity1 = new QuantityDTO(2.0, QuantityDTO.LengthUnit.FEET);
+			QuantityDTO quantity2 = new QuantityDTO(24.0, QuantityDTO.LengthUnit.INCHES);
 
-			QuantityDTO inches = new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES);
+			boolean comparisonResult = controller.performComparison(quantity1, quantity2);
+			logger.info("Comparison result: " + comparisonResult);
 
-			boolean result = controller.performComparison(feet, inches);
-			logger.info("Comparison Result: " + result);
-
-			QuantityDTO conversion = controller.performConversion(feet,
+			QuantityDTO conversionResult = controller.performConversion(
+					new QuantityDTO(1.0, QuantityDTO.LengthUnit.FEET),
 					new QuantityDTO(0.0, QuantityDTO.LengthUnit.INCHES));
+			logger.info("Conversion result: " + conversionResult);
 
-			logger.info("Conversion Result: " + conversion);
-
-			QuantityDTO addition = controller.performAddition(feet, inches,
-					new QuantityDTO(0.0, QuantityDTO.LengthUnit.FEET));
-
-			logger.info("Addition Result: " + addition);
-
-			QuantityDTO subtraction = controller.performSubtraction(new QuantityDTO(2.0, QuantityDTO.LengthUnit.FEET),
+			QuantityDTO additionResult = controller.performAddition(new QuantityDTO(1.0, QuantityDTO.LengthUnit.FEET),
 					new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES),
 					new QuantityDTO(0.0, QuantityDTO.LengthUnit.FEET));
+			logger.info("Addition result: " + additionResult);
 
-			logger.info("Subtraction Result: " + subtraction);
+			QuantityDTO subtractionResult = controller.performSubtraction(
+					new QuantityDTO(2.0, QuantityDTO.LengthUnit.FEET),
+					new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES),
+					new QuantityDTO(0.0, QuantityDTO.LengthUnit.FEET));
+			logger.info("Subtraction result: " + subtractionResult);
 
-			double division = controller.performDivision(new QuantityDTO(24.0, QuantityDTO.LengthUnit.INCHES),
+			double divisionResult = controller.performDivision(new QuantityDTO(24.0, QuantityDTO.LengthUnit.INCHES),
 					new QuantityDTO(2.0, QuantityDTO.LengthUnit.FEET));
-
-			logger.info("Division Result: " + division);
+			logger.info("Division result: " + divisionResult);
 
 			try {
-
 				controller.performAddition(new QuantityDTO(0.0, QuantityDTO.TemperatureUnit.CELSIUS),
 						new QuantityDTO(32.0, QuantityDTO.TemperatureUnit.FAHRENHEIT),
 						new QuantityDTO(0.0, QuantityDTO.TemperatureUnit.CELSIUS));
-
 			} catch (QuantityMeasurementException e) {
-
-				logger.warning("Expected Error: " + e.getMessage());
+				logger.warning("Expected error: " + e.getMessage());
 			}
 
 			logger.info("---- Operation History ----");
-
 			List<QuantityMeasurementEntity> history = controller.getHistory();
-
 			for (QuantityMeasurementEntity entity : history) {
 				logger.info(entity.toString());
 			}
 
 		} catch (Exception e) {
-
-			logger.severe("Application Error: " + e.getMessage());
+			logger.severe("Application error: " + e.getMessage());
 		}
 
 		logger.info("Application execution finished.");
 	}
 
-	private static IQuantityMeasurementRepository createRepository() {
+	/*
+	 * Creates repository based on configuration.
+	 */
+	private IQuantityMeasurementRepository createRepository() {
+		ApplicationConfig config = ApplicationConfig.getInstance();
 
-		String repositoryType = DatabaseConfig.getProperty("repository.type");
+		String repositoryType = config.getProperty(ApplicationConfig.ConfigKey.REPOSITORY_TYPE.getKey(), "database");
 
 		if ("database".equalsIgnoreCase(repositoryType)) {
 			return QuantityMeasurementDatabaseRepository.getInstance();
