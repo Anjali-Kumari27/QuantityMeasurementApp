@@ -24,6 +24,7 @@ import com.app.quantitymeasurement.service.IQuantityMeasurementService;
  */
 @RestController
 @RequestMapping("/api/v1/quantities")
+@CrossOrigin(origins = "http://localhost:5173")
 public class QuantityMeasurementController {
 
     /**
